@@ -61,7 +61,13 @@ BEGIN
             COUNT(DISTINCT CASE WHEN CAST(' + QUOTENAME(@currentCommentColumn) + ' AS NVARCHAR(MAX)) IS NOT NULL 
                                 AND DATALENGTH(CAST(' + QUOTENAME(@currentCommentColumn) + ' AS NVARCHAR(MAX))) > 0 THEN t.[Date] END) AS DistinctVolume,
             COUNT(*) AS TotalRows,
-            ''' + @currentTableName + ''' AS TableName,
+            ''''' + @currentTableName + ''''' AS TableName,
+        ';
+
+        -- Debug: Print the SQL up to TableName
+        PRINT 'SQL up to TableName for ' + @currentTableName + ': ' + @sql;
+
+        SET @sql = @sql + '
             (SELECT TOP 1 CAST(' + QUOTENAME(@currentCommentColumn) + ' AS NVARCHAR(MAX))
              FROM ' + @currentTable + ' sub
              WHERE CAST(' + QUOTENAME(@currentCommentColumn) + ' AS NVARCHAR(MAX)) IS NOT NULL
